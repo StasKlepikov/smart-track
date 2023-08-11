@@ -1,0 +1,39 @@
+@import '../../../../../../utilities/variables';
+
+.doctor-colors {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 120px;
+    
+    button {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+    }
+
+    & button:nth-child(1) {
+        background: $blue-color;
+    }
+
+    & button:nth-child(2) {
+        background: $purple-color;
+    }
+
+    & button:nth-child(3) {
+        background: $yellow-color;
+    }
+
+    & button:nth-child(4) {
+        background: $green-color;
+    }
+
+    & button:nth-child(5) {
+        background: $red-color;
+    }
+    & button:nth-child(6) {
+        background: $white-color;
+        border: 2px solid #dddddd;
+    }
+
+}
