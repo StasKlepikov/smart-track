@@ -12,18 +12,18 @@ import { DoctorElement } from './doctorElement/DoctorElement';
 export const Doctors = () => {
 
     const dispatch = useDispatch();
-    const doctors = useSelector<{ doctors: DoctorsState  }, Doctor[]>(state => state.doctors.doctors);
+    const doctors = useSelector<{ doctors: DoctorsState }, Doctor[]>(state => state.doctors.doctors);
     
     const getDoctors = async () => {
         const response = await API.get("/doctors");
-        dispatch(putDoctors(response.data));
+        dispatch(putDoctors(response.data));      
     };
 
     useEffect(() => {getDoctors().then()}, []);
 
     return (
         <div className="element">
-            {doctors.map(doctor => <DoctorElement doctor={doctor} key={doctor.id} />)}
+            {doctors.map((doctor, index) => <DoctorElement doctor={doctor} index={ index + 1 } key={doctor.id} />)}
         </div>
     );
 }

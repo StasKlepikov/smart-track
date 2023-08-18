@@ -1,9 +1,11 @@
 import './Sequence.scss';
 
+import { SequenceHeader } from './sequenceHeader/SequenceHeader';
+
 export const Sequence = () => { 
     return (
         <div className="sequence">
-            <p>I`m Sequence page!</p>
+            <SequenceHeader />
         </div>
     );
 }

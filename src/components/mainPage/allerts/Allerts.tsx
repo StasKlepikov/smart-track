@@ -1,9 +1,11 @@
 import './Allerts.scss';
 
+import { AllertsHeader } from './allertHeader/AllertsHeader';
+
 export const Allerts = () => { 
     return (
         <div className="allerts">
-            <p>I`m Allerts page!</p>
+            <AllertsHeader />
         </div>
     );
 }

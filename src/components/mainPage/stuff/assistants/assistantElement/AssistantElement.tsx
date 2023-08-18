@@ -1,3 +1,4 @@
+import { DoctorElementProps } from '../../../../../services/typedef';
 import '../../StuffElement.scss';
 
 
@@ -16,13 +17,9 @@ export const AssistantElement = () => {
             <div className="worker__phone">
                 <p>telephone</p>
             </div>
-            <div className="worker__room">
-                <p>Room: room</p>
-            </div>
             <div className="worker__btns">
-                <button></button>
-                <button></button>
-                <button></button>
+                <button title='Edit'></button>
+                <button title='Delete'></button>
             </div>
         </div>
     );

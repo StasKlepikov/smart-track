@@ -16,9 +16,6 @@ export const ReceptionistElement = () => {
             <div className="worker__phone">
                 <p>telephone</p>
             </div>
-            <div className="worker__room">
-                <p>Room: room</p>
-            </div>
             <div className="worker__btns">
                 <button></button>
                 <button></button>
