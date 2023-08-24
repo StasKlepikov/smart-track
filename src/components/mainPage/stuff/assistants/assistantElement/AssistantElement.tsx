@@ -1,4 +1,4 @@
-import { DoctorElementProps } from '../../../../../services/typedef';
+
 import '../../StuffElement.scss';
 
 

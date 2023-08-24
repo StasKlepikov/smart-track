@@ -7,7 +7,7 @@ import { DoctorMicroAllert } from './DoctorMicroAllert';
 import { useDispatch } from 'react-redux';
 import { changeModal } from '../../../../../services/actions/modalAction';
 import { deleteDoctor } from '../../../../../services/actions/doctorsAction';
-
+import { API } from '../../../../../axios';
 
 
 export const DoctorElement = ({ doctor, index }: DoctorElementProps) => { 
@@ -24,7 +24,13 @@ export const DoctorElement = ({ doctor, index }: DoctorElementProps) => {
     };
 
     const handleDelete = () => {
-        dispatch(deleteDoctor(doctor.id));
+        API.delete(`/doctors/${doctor.id}`)
+        .then(response => {
+            dispatch(deleteDoctor(doctor.id));
+        })
+        .catch(error => {
+            console.log(error);
+        });
     };
 
     return (
@@ -41,7 +47,7 @@ export const DoctorElement = ({ doctor, index }: DoctorElementProps) => {
             <div className="worker__phone">
                 <p>{doctor.phone}</p>
             </div>
-            {doctor.allerts.map((allert) => <DoctorMicroAllert allert={allert} />)}
+            {doctor.allerts?.map((allert) => <DoctorMicroAllert allert={allert} />)}
             <div className="worker__room">
                 <p>Room: {doctor.room}</p>
             </div>

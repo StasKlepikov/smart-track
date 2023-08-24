@@ -23,7 +23,7 @@ export const Doctors = () => {
 
     return (
         <div className="element">
-            {doctors.map((doctor, index) => <DoctorElement doctor={doctor} index={ index + 1 } key={doctor.id} />)}
+            {doctors?.map((doctor, index) => <DoctorElement doctor={doctor} index={ index + 1 } key={doctor.id} />)}
         </div>
     );
 }

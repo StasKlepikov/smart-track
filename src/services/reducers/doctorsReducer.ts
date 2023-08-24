@@ -3,6 +3,7 @@ import { PayloadAction } from "@reduxjs/toolkit";
 import { DOCTORS_ADD, DOCTORS_DELETE, DOCTORS_EDIT, DOCTORS_PUT } from "../actions/doctorsAction";
 import type { AddDoctorPayload, Doctor, DoctorsState, EditDoctorPayload } from "../typedef";
 
+
 const initialState: DoctorsState = {
     doctors: []
 };
@@ -16,14 +17,15 @@ export type DoctorAction = PutDoctorAction | AddDoctorAction | EditDoctorAction 
 export const doctorsReducer = (state = initialState, action: DoctorAction) => {
     switch (action.type) {
         case DOCTORS_PUT: {
+            const doctors = action.payload.map(doctor => ({ ...doctor, createdAt: new Date(doctor.createdAt).toString() }));
             return {
-                ...state, doctors: [...action.payload],
+                ...state, doctors,
             };
         }
         case DOCTORS_ADD: { 
             const defaultValues = {
                 id: v4(),
-                createdAt: new Date(),
+                createdAt: new Date().toString(),
                 fullname: 'Name Surname',
                 mail: 'mail@mail.com',
                 phone: '+XX (XXX) XXX XXXX',
@@ -35,7 +37,7 @@ export const doctorsReducer = (state = initialState, action: DoctorAction) => {
         }
         case DOCTORS_EDIT: {
             const updatedDoctors = state.doctors
-                .map((doctor: Doctor) => {
+                ?.map((doctor: Doctor) => {
                     if (doctor.id === action.payload.id) {
                         return { ...action.payload };
                     }

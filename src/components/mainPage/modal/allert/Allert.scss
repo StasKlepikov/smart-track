@@ -23,17 +23,6 @@
             }
         }
     }
-
-    p {
-        position: absolute;
-        top: 40px;
-        right: 10px;
-        text-align: center;
-        font-size: 12px;
-        margin-top: 7px;
-        user-select: none;
-    }
-
     .checkmark {
         position: relative;
         top: 0;
@@ -44,5 +33,15 @@
         background-color: rgb($red-color, 0.3);
         border: 2px solid $red-color;
         transition: 0.1s all ease-in-out;
+    }
+
+    p {
+        position: absolute;
+        top: 40px;
+        right: 10px;
+        text-align: center;
+        font-size: 12px;
+        margin-top: 7px;
+        user-select: none;
     }
 }

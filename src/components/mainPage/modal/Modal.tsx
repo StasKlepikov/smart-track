@@ -2,23 +2,57 @@ import './Modal.scss';
 
 import { ButtonAdd } from '../../../utilities/buttonAdd/ButtonAdd';
 
-import { useSelector } from 'react-redux';
-import { Doctor, RootState } from '../../../services/typedef';
-import { useDispatch } from 'react-redux';
-import { changeModal } from '../../../services/actions/modalAction';
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { Doctor, EditDoctorPayload, RootState } from '../../../services/typedef';
+import { changeModal } from '../../../services/actions/modalAction';
 import { addDoctor, editDoctor } from '../../../services/actions/doctorsAction';
 import { Allert } from './allert/Allert';
 import { defaultDoctor } from '../../../services/reducers/modalReducer';
 import { API } from '../../../axios';
+
 
 export const Modal = () => {
 
     const dispatch = useDispatch();
     const { isOpen, mode, currentDoctorId, initialDoctor } = useSelector((state: RootState) => state.modal);
     const [modalDoctor, setModalDoctor] = useState<Omit<Doctor, "id">>(initialDoctor);
-    useEffect(() => { setModalDoctor(initialDoctor); console.log("initialDoctor: ", initialDoctor); }, [initialDoctor]);
-    
+    useEffect(() => setModalDoctor(initialDoctor), [initialDoctor]);
+
+    const handleIsClose = () => {
+        dispatch(changeModal({
+            isOpen: false,
+            mode: '',
+        }));
+    };
+
+    const handleAddDoctor = () => { 
+        if (!initialDoctor) return;
+        API.post("/doctors", initialDoctor);
+        dispatch(addDoctor(initialDoctor));
+    };
+
+    const handleEditDoctor = () => { 
+        if (!initialDoctor || !currentDoctorId) return;
+
+        const updatedDoctor: EditDoctorPayload = {
+            id: currentDoctorId,
+            fullname: initialDoctor.fullname,
+            mail: initialDoctor.mail,
+            phone: initialDoctor.phone,
+            room: initialDoctor.room,
+        };
+        
+        API.patch(`/doctors/${currentDoctorId}`, updatedDoctor)
+            .then(response => {
+                dispatch(editDoctor(updatedDoctor));
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    };
+
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newName = e.target.value;
         const newDoctor = { ...modalDoctor, fullname: newName };
@@ -37,25 +71,6 @@ export const Modal = () => {
         dispatch(changeModal({ initialDoctor: newDoctor}));
     };
 
-    const handleIsClose = () => {
-        dispatch(changeModal({
-            isOpen: false,
-            mode: '',
-
-        }));
-    };
-
-    const handleAddDoctor = () => { 
-        if (!initialDoctor) return;
-        API.post("/doctors", initialDoctor);
-        dispatch(addDoctor(initialDoctor));
-    };
-
-    const handleEditDoctor = () => { 
-        if (!initialDoctor || !currentDoctorId) return;
-        dispatch(editDoctor({...initialDoctor, id: currentDoctorId}));
-    };
-
     return (
         <div className={isOpen ? "modal open" : "modal"}>
             <div
@@ -63,27 +78,29 @@ export const Modal = () => {
                 onClick={e => e.stopPropagation()}>
                 <button
                     className="modalBtn"
-                    onClick={() => handleIsClose()}></button>
+                    onClick={() => { handleIsClose(); dispatch(changeModal({ isOpen: false, mode: '', initialDoctor: defaultDoctor })) } }></button>
                 <div className="modal__form">
-                    <h2>{mode === "add" ? "Add new Doctor" : "Edit Doctor" }</h2>
+                    <h2>{mode === "add" ? "Add new Doctor" : "Edit Doctor"}</h2>
                     <label htmlFor="name">Name</label>
                     <input
                         value={initialDoctor?.fullname}
                         onChange={handleNameChange}
                         type="text"
-                        placeholder='Steve Perry' />
+                        placeholder='Steve Perry'/>
                     <label htmlFor="email">Email</label>
                     <input
                         value={initialDoctor?.mail}
                         onChange={handleMailChange}
                         type="text"
-                        placeholder='example@mail.com' />
+                        placeholder='example@mail.com'
+                        maxLength={32}/>
                     <label htmlFor="phone number">Phone number</label>
                     <input
                         value={initialDoctor?.phone}
                         onChange={handlePhoneChange}
                         type="text"
-                        placeholder='+xx-(xxx)-xxx-xxxx' />
+                        placeholder='+__-(___)-___-____'
+                        maxLength={12}/>
                     <div className="modal__allerts">
                         <label htmlFor="allerts">Allerts</label>
                         <div className="allerts-container">
@@ -98,7 +115,7 @@ export const Modal = () => {
                 </div>
                 <div className="modal__button">
                     <ButtonAdd text='Save' onClick={() => {
-                        if (!modalDoctor.fullname || !modalDoctor.mail || !modalDoctor.phone) return alert("Enter, please!");
+                        if (!modalDoctor.fullname || !modalDoctor.mail || !modalDoctor.phone) return alert("Enter all fields, please!");
                         mode === 'add'
                             ? handleAddDoctor()
                             : handleEditDoctor();
