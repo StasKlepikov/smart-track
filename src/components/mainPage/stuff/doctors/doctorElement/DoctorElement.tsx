@@ -38,18 +38,20 @@ export const DoctorElement = ({ doctor, index }: DoctorElementProps) => {
             <div className="worker__id">
                 <h3>{index}</h3>
             </div>
-            <div className="worker__name">
+            <div className="worker__name flex-element">
                 <h3>{doctor.fullname}</h3>
             </div>
-            <div className="worker__mail">
+            <div className="worker__mail flex-element">
                 <p>{doctor.mail}</p>
             </div>
-            <div className="worker__phone">
+            <div className="worker__phone flex-element">
                 <p>{doctor.phone}</p>
             </div>
-            {doctor.allerts?.map((allert) => <DoctorMicroAllert allert={allert} />)}
-            <div className="worker__room">
-                <p>Room: {doctor.room}</p>
+            <div className="worker__allerts flex-element">
+                {doctor.allerts?.map((allert) => <DoctorMicroAllert allert={allert} />)}
+            </div>
+            <div className="worker__room flex-element">
+                <p>Rooms {doctor.room}</p>
             </div>
             <div className="worker__btns">
                 <button title='Edit' onClick={()=> handleEdit()}></button>
