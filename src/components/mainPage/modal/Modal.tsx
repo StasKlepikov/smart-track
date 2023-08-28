@@ -53,21 +53,25 @@ export const Modal = () => {
             });
     };
 
+    const trimSpaces = (inputValue: string) => {
+        return inputValue.replace(/\s+/g, ' ').trimStart();
+    };
+
     const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newName = e.target.value;
-        const newDoctor = { ...modalDoctor, fullname: newName };
+        const newDoctor = { ...modalDoctor, fullname: trimSpaces(newName) };
         dispatch(changeModal({ initialDoctor: newDoctor}));
     };
 
     const handleMailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newMail = e.target.value;
-        const newDoctor = { ...modalDoctor, mail: newMail };
+        const newDoctor = { ...modalDoctor, mail: trimSpaces(newMail) };
         dispatch(changeModal({ initialDoctor: newDoctor}));
     };
 
     const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const newPhone = e.target.value;
-        const newDoctor = { ...modalDoctor, phone: newPhone };
+        const newDoctor = { ...modalDoctor, phone: trimSpaces(newPhone) };
         dispatch(changeModal({ initialDoctor: newDoctor}));
     };
 
