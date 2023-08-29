@@ -1,0 +1,43 @@
+@import '../../../../utilities/variables';
+
+.allert {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    background-color: initial;
+    cursor: pointer;
+    width: calc(100% / 6);
+    margin-bottom: 35px;
+
+    input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+
+        &:checked~.checkmark {
+            background-image: url('../../../../assets/icons/trash-black.png') !important;
+            background-repeat: no-repeat !important;
+            background-size: 20px 20px !important;
+            transform: scale(1.26);
+
+            p {
+                font-weight: 600;
+            }
+        }
+    }
+    .checkmark {
+        display: flex;
+        justify-content: center;
+        height: 45px;
+        width: 45px;
+        border-radius: 50%;
+        transition: 0.1s all ease-in-out;
+        background-position: 50% 50% !important;
+
+        p {
+            font-size: 12px;
+            margin-top: 48px;
+            user-select: none;
+        }
+    }    
+}

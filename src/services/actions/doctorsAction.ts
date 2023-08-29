@@ -13,23 +13,23 @@ export const putDoctors = (payload: Doctor[]): PutDoctorAction => {
         payload
     };
 };
-export const addDoctor = (doctor: AddDoctorPayload): AddDoctorAction  => {
+export const addDoctor = (doctor: AddDoctorPayload): AddDoctorAction => {
     return {
         type: DOCTORS_ADD,
         payload: doctor,
     }
-}
+};
 
 export const editDoctor = (doctor: EditDoctorPayload): EditDoctorAction => {
     return {
         type: DOCTORS_EDIT,
         payload: doctor,
     }
-}
+};
 
 export const deleteDoctor = (doctorId: string): DeleteDoctorAction => {
     return {
         type: DOCTORS_DELETE,
         payload: doctorId,
     }
-}
+};

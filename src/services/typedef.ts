@@ -8,6 +8,12 @@ export interface Doctor {
     allerts: Allert[];
 };
 
+export interface Allert { 
+    id: string;
+    name: string;
+    color: string;
+};
+
 export interface AddDoctorPayload { 
     fullname: string;
     mail: string;
@@ -18,14 +24,11 @@ export interface AddDoctorPayload {
 
 export type EditDoctorPayload = Pick<Doctor, 'id'> & Partial<AddDoctorPayload>;
 
-export interface Allert { 
-    id: string;
-    name: string;
-    color: string;
-}
-
 export interface DoctorsState { 
     doctors: Doctor[];
+};
+export interface AllertsState { 
+    allerts: Allert[];
 };
 
 export interface DoctorElementProps{ 
