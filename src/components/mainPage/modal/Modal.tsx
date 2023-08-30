@@ -19,6 +19,7 @@ export const Modal = () => {
     
     const dispatch = useDispatch();
     const { isOpen, mode, currentDoctorId, initialDoctor } = useSelector((state: RootState) => state.modal);
+    
     const [modalDoctor, setModalDoctor] = useState<Omit<Doctor, "id">>(initialDoctor);
     useEffect(() => setModalDoctor(initialDoctor), [initialDoctor]);
 
@@ -57,6 +58,7 @@ export const Modal = () => {
             mail: initialDoctor.mail,
             phone: initialDoctor.phone,
             room: initialDoctor.room,
+            allerts: initialDoctor.allerts,
         };
         
         API.patch(`/doctors/${currentDoctorId}`, updatedDoctor)
@@ -69,25 +71,12 @@ export const Modal = () => {
     };
 
     const trimSpaces = (inputValue: string) => {
-        return inputValue.replace(/\s+/g, ' ').trim();
+        return inputValue.replace(/\s+/g, ' ').trimStart();
     };
 
-    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newName = e.target.value;
-        const newDoctor = { ...modalDoctor, fullname: trimSpaces(newName) };
-        dispatch(changeModal({ initialDoctor: newDoctor}));
-    };
-
-    const handleMailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newMail = e.target.value;
-        const newDoctor = { ...modalDoctor, mail: trimSpaces(newMail) };
-        dispatch(changeModal({ initialDoctor: newDoctor}));
-    };
-
-    const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newPhone = e.target.value;
-        const newDoctor = { ...modalDoctor, phone: trimSpaces(newPhone) };
-        dispatch(changeModal({ initialDoctor: newDoctor}));
+    const handleFieldChange = (field: keyof Doctor, value: string) => {
+        const newDoctor = { ...initialDoctor, [field]: trimSpaces(value) };
+        dispatch(changeModal({ initialDoctor: newDoctor }));
     };
 
     return (
@@ -103,20 +92,20 @@ export const Modal = () => {
                     <label htmlFor="name">Name</label>
                     <input
                         value={initialDoctor?.fullname}
-                        onChange={handleNameChange}
+                        onChange={(e) => handleFieldChange('fullname', e.target.value)}
                         type="text"
                         placeholder='Steve Perry'/>
                     <label htmlFor="email">Email</label>
                     <input
                         value={initialDoctor?.mail}
-                        onChange={handleMailChange}
+                        onChange={(e) => handleFieldChange('mail', e.target.value)}
                         type="text"
                         placeholder='example@mail.com'
                         maxLength={32}/>
                     <label htmlFor="phone number">Phone number</label>
                     <input
                         value={initialDoctor?.phone}
-                        onChange={handlePhoneChange}
+                        onChange={(e) => handleFieldChange('phone', e.target.value)}
                         type="text"
                         placeholder='+__-(___)-___-____'
                         maxLength={12}/>
