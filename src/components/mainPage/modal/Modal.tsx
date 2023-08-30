@@ -112,7 +112,13 @@ export const Modal = () => {
                     <div className="modal__allerts">
                         <label htmlFor="allerts">Allerts</label>
                         <div className="allerts-container">
-                            {allerts.map((allert) => <AllertElement allert={ allert } />)}
+                            {allerts.map(
+                                (allert) =>
+                                    <AllertElement
+                                        allert={allert}
+                                        checked={initialDoctor.allerts.some(
+                                            (doctorAllert) => doctorAllert.id === allert.id)}
+                                    />)}
                         </div>
                     </div>
                 </div>

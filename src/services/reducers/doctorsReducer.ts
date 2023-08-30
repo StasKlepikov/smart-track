@@ -29,7 +29,8 @@ export const doctorsReducer = (state = initialState, action: DoctorAction) => {
                 fullname: 'Name Surname',
                 mail: 'mail@mail.com',
                 phone: '+XX (XXX) XXX XXXX',
-                room: 'room'
+                room: 'room',
+                allerts: []
             }
             return {
                 ...state, doctors: [...state.doctors, {...defaultValues, ...action.payload }]
