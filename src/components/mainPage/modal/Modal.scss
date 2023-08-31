@@ -1,0 +1,106 @@
+@import '../../../utilities/variables';
+
+@mixin btnColor($background, $outline) {
+    background: rgb($background, 0.3);
+    outline: 2px solid $outline;
+}
+
+.modal {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgb($grey-color, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: .5s all ease-in-out;
+
+    &.open {
+        opacity: 1;
+        pointer-events: all;
+    }
+
+    .modal__content {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        width: 450px;
+        padding: 30px;
+        background: $white-color;
+        border-radius: 20px;
+        box-shadow: 0px 4px 20px 0px rgba(32, 43, 93, 0.12);
+        transform: scale(0.5);
+        transition: .3s all ease-in-out;
+
+        &.open {
+            transform: scale(1);
+        }
+
+        .modalBtn {
+            width: 20px;
+            height: 20px;
+            background: initial;
+            background-image: url('../../../assets/icons/close.png');
+            background-position: 0 0;
+            background-repeat: no-repeat;
+            background-size: contain;
+        }
+
+        .modal__form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            
+            h2 {
+                text-align: center;
+                font-size: 18px;
+                font-weight: 500;
+                margin-bottom: 10px;
+            }
+
+            > label {
+                font-size: 12px;
+                margin: 0 0 5px 20px;
+            }
+
+            input {
+                width: 100%;
+                height: 43px;
+                border-radius: 20px;
+                border: 1px solid $grey-color;
+                padding: 20px;
+                font-size: 16px;
+                margin-bottom: 15px;
+            }
+        }
+
+        .modal__allerts {
+            display: flex;
+            flex-direction: column;
+            align-items: space-between;
+            width: 100%;
+            height: auto;
+            margin-top: 15px;
+
+            .allerts-container {
+                display: flex;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                margin-top: 15px;
+                height: auto;
+            }
+        }
+
+        .modal__button {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            margin-top: 30px;
+        }
+    }
+}
+

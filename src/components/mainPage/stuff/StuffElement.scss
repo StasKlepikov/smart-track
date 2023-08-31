@@ -3,22 +3,24 @@
 .element {
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
     min-height: 100%;
     background: $white-color;
-    padding: 100px 0;
+    padding: 50px 0;
 }
 
 .worker-element {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-flow: row wrap;
+    align-items: stretch;
     width: 1100px;
     height: 56px;
     margin-bottom: 5px;
-    padding-right: 15px;
+    padding-right: 20px;
     border-radius: 20px 0px;
     background: #FFF;
     box-shadow: 0px 4px 20px 0px rgba(178, 178, 233, 0.19);
@@ -35,6 +37,14 @@
         font-weight: 400;
     }
 
+    .flex-element {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-grow: 1;
+        height: 100%;
+    }
+
     .worker__id {
         display: flex;
         align-items: center;
@@ -47,24 +57,32 @@
     }
 
     .worker__name {
-        display: flex;
+        flex-grow: 2;
     }
 
-    .worker__btns button {
-        width: 20px;
-        height: 20px;
-        background: initial;
-        margin-right: 20px;
-        background-position: 0 0;
-        background-repeat: no-repeat;
-        background-size: contain;
+    .worker__btns {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        width: 60px;
+        margin-left: 15px;
 
-        &:nth-child(1) {
-            background-image: url('../../../assets/icons/edit.png');
-        }
+        button {
+            width: 20px;
+            height: 20px;
+            background: initial;
+            background-position: 0 0;
+            background-repeat: no-repeat;
+            background-size: contain;
 
-        &:nth-child(2) {
-            background-image: url('../../../assets/icons/trash.png');
+            &:nth-child(1) {
+                background-image: url('../../../assets/icons/edit.png');
+                margin-right: 20px;
+            }
+
+            &:nth-child(2) {
+                background-image: url('../../../assets/icons/trash.png');
+            }
         }
     }
 }

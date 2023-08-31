@@ -1,0 +1,21 @@
+@import '../variables';
+
+.button-add {
+    width: 153px; 
+    height: 50px;
+    padding: 11px 41px; 
+    border-radius: 20px;
+    background: $green-light-color;
+    color: $white-color;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 24px;
+    transition: .2s all ease-in-out;
+
+    &:hover {
+        border-radius: 20px;
+        border: 2px solid $green-light-color;
+        background: rgba($green-light-color, 0.5);
+        box-shadow: 0px 4px 20px 0px rgba(0, 5, 56, 0.10);
+    }
+}
