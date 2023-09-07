@@ -62,9 +62,11 @@ export interface AssistantElementProps{
 };
 
 export interface ModalState {
-    currentDoctorId?: string;
-    initialDoctor: Omit <Doctor, "id">;
+    currentWorkerId?: string;
+    initialDoctor: Omit<Doctor, "id">;
+    initialAssistant: Omit<Assistant, "id">;
     isOpen: boolean;
+    target: string;
     mode: string;
 };
 

@@ -18,7 +18,7 @@ export const DoctorElement = ({ doctor, index }: DoctorElementProps) => {
         dispatch(changeModal({
             isOpen: true,
             mode: 'edit',
-            currentDoctorId: id,
+            currentWorkerId: id,
             initialDoctor
         }));
     };

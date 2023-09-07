@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { Doctor, DoctorsState } from '../../../../services/typedef';
 
 import { DoctorElement } from './doctorElement/DoctorElement';
+import { changeModal } from '../../../../services/actions/modalAction';
 
 export const Doctors = () => {
 
@@ -19,7 +20,10 @@ export const Doctors = () => {
         dispatch(putDoctors(response.data));      
     };
 
-    useEffect(() => {getDoctors().then()}, []);
+    useEffect(() => {
+        getDoctors().then();
+        dispatch(changeModal({target: "doctor"}));
+    }, []);
 
     return (
         <div className="element">

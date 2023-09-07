@@ -11,9 +11,17 @@ export const defaultDoctor = {
     createdAt: new Date()
 };
 
+export const defaultWorker = {
+    fullname: '',
+    mail: '',
+    phone: '',
+    createdAt: new Date()
+};
+
 const initialState = {
     isOpen: false,
     mode: "add",
+    target: "doctor",
     initialDoctor: defaultDoctor
 };
 

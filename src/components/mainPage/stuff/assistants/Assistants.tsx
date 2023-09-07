@@ -6,6 +6,7 @@ import { putAssistants } from '../../../../services/actions/assistantsAction';
 import { Assistant, AssistantsState } from '../../../../services/typedef';
 import { API } from '../../../../axios';
 import { AssistantElement } from './assistantElement/AssistantElement';
+import { changeModal } from '../../../../services/actions/modalAction';
 
 export const Assistants = () => {
 
@@ -17,11 +18,14 @@ export const Assistants = () => {
         dispatch(putAssistants(response.data));      
     };
 
-    useEffect(() => {getAssistants().then()}, []);
+    useEffect(() => {
+        getAssistants().then();
+        dispatch(changeModal({target: "assistant"}));
+    }, []);
 
     return (
         <div className="element">
             {assistants?.map((assistant, index) => <AssistantElement assistant={assistant} index={ index + 1 } key={assistant.id}/>)}
         </div>
     );
- }
+}
