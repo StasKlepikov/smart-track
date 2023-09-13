@@ -24,8 +24,6 @@ export const Modal = () => {
     const dispatch = useDispatch();
     const { isOpen, mode, target, currentWorkerId, initialDoctor, initialAssistant } = useSelector((state: RootState) => state.modal);
     
-    // const [modalDoctor, setModalDoctor] = useState<Omit<Doctor, "id">>(initialDoctor);
-    // useEffect(() => setModalDoctor(initialDoctor), [initialDoctor]);
 
     const allerts = useSelector<{ allerts: AllertsState }, Allert[]>(state => state.allerts.allerts);
     
@@ -91,42 +89,14 @@ export const Modal = () => {
         dispatch(action(worker));
     };
 
-    const handleAddDoctor = () => { 
-        if (!initialDoctor) return;
-        API.post("/doctors", initialDoctor);
-        dispatch(addDoctor(initialDoctor));
-    };
-
-       const handleAddAssistant = () => { 
-        if (!initialAssistant) return;
-        API.post("/assistants", initialAssistant);
-        dispatch(addAssistants(initialAssistant));
-    };
-
-    const handleEditDoctor = () => { 
-        if (!initialDoctor || !currentWorkerId) return;
-
-        const updatedDoctor: EditDoctorPayload = {
-            id: currentWorkerId,
-            fullname: initialDoctor.fullname,
-            mail: initialDoctor.mail,
-            phone: initialDoctor.phone,
-            room: initialDoctor.room,
-            allerts: initialDoctor.allerts,
-        };
-        
-        API.patch(`/doctors/${currentWorkerId}`, updatedDoctor)
-            .then(response => {
-                dispatch(editDoctor(updatedDoctor));
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    };
-
     const trimSpaces = (inputValue: string) => {
         return inputValue.replace(/\s+/g, ' ').trimStart();
     };
+
+    const toUpperFirstLetter = (str: string) => {
+        if (!str) return str;
+        return str[0].toUpperCase() + str.slice(1);
+    }
 
     const handleFieldChange = (field: keyof (Doctor | Assistant), value: string) => {
         const workerActions: WorkerActions<Omit<Doctor | Assistant, "id">> = {
@@ -165,7 +135,7 @@ export const Modal = () => {
                     className="modalBtn"
                     onClick={() => { handleIsClose(); dispatch(changeModal({ isOpen: false, mode: '', initialDoctor: defaultDoctor , initialAssistant: defaultWorker})) } }></button>
                 <div className="modal__form">
-                    <h2>{mode === "add" ? `Add new ${target}` : `Edit ${target}`}</h2>
+                    <h2>{mode === "add" ? `Add new ${toUpperFirstLetter(target)}` : `Edit ${toUpperFirstLetter(target)}`}</h2>
                     <label htmlFor="name">Name</label>
                     <input
                         value={getWorker()?.fullname}
