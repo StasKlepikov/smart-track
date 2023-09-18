@@ -2,7 +2,7 @@ import './AllertElement.scss';
 
 import { Allert, RootState } from '../../../../services/typedef';
 import { useDispatch } from 'react-redux';
-import { defaultDoctor } from '../../../../services/reducers/modalReducer';
+import { defaultWorker } from '../../../../services/reducers/modalReducer';
 import { changeModal } from '../../../../services/actions/modalAction';
 import { useSelector } from 'react-redux';
 import { useState } from 'react';

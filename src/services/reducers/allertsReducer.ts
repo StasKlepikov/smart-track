@@ -1,4 +1,3 @@
-import { v4 } from "uuid";
 import { PayloadAction } from "@reduxjs/toolkit";
 import type { AllertsState } from "../typedef";
 import { ALLERTS_PUT } from "../actions/allertsAction";

@@ -2,26 +2,28 @@ import './Modal.scss';
 
 import { ButtonAdd } from '../../../utilities/buttonAdd/ButtonAdd';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { Allert, AllertsState, Doctor, EditDoctorPayload, RootState } from '../../../services/typedef';
+import { Allert, AllertsState, Assistant, Doctor, EditDoctorPayload, RootState } from '../../../services/typedef';
 import { changeModal } from '../../../services/actions/modalAction';
 import { addDoctor, editDoctor } from '../../../services/actions/doctorsAction';
-import { defaultDoctor } from '../../../services/reducers/modalReducer';
+import { defaultDoctor, defaultWorker} from '../../../services/reducers/modalReducer';
 import { API } from '../../../axios';
 import { putAllerts } from '../../../services/actions/allertsAction';
 import { AllertElement } from './allert/AllertElement';
 import { Allerts } from '../allerts/Allerts';
+import { addAssistants, editAssistants } from '../../../services/actions/assistantsAction';
 
+type WorkerActions<TWorker extends object> = {
+    [key: string]: { worker: TWorker, action: Function }
+};
 
 export const Modal = () => {
     
     const dispatch = useDispatch();
-    const { isOpen, mode, currentDoctorId, initialDoctor } = useSelector((state: RootState) => state.modal);
+    const { isOpen, mode, target, currentWorkerId, initialDoctor, initialAssistant } = useSelector((state: RootState) => state.modal);
     
-    const [modalDoctor, setModalDoctor] = useState<Omit<Doctor, "id">>(initialDoctor);
-    useEffect(() => setModalDoctor(initialDoctor), [initialDoctor]);
 
     const allerts = useSelector<{ allerts: AllertsState }, Allert[]>(state => state.allerts.allerts);
     
@@ -43,40 +45,85 @@ export const Modal = () => {
         }));
     };
 
-    const handleAddDoctor = () => { 
-        if (!initialDoctor) return;
-        API.post("/doctors", initialDoctor);
-        dispatch(addDoctor(initialDoctor));
+    const handleAdd = () => { 
+        const workerActions: WorkerActions<Omit<Doctor | Assistant, "id">> =
+        {
+            doctor: { 
+                worker: initialDoctor,
+                action: addDoctor
+            },
+            assistant: {
+                worker: initialAssistant,
+                action: addAssistants
+            }
+        };
+        const workerAction = workerActions[target];
+        if (!workerAction) return;
+        const { worker, action } = workerAction;
+        API.post(`/${target}s`, worker);
+        dispatch(action(worker));
     };
 
-    const handleEditDoctor = () => { 
-        if (!initialDoctor || !currentDoctorId) return;
-
-        const updatedDoctor: EditDoctorPayload = {
-            id: currentDoctorId,
-            fullname: initialDoctor.fullname,
-            mail: initialDoctor.mail,
-            phone: initialDoctor.phone,
-            room: initialDoctor.room,
-            allerts: initialDoctor.allerts,
+    const handleEdit = () => { 
+        const workerActions: WorkerActions<Partial <Doctor | Assistant>> =
+        {
+            doctor: { 
+                worker: {
+                    id: currentWorkerId,
+                    ...initialDoctor
+                },
+                action: editDoctor
+            },
+            assistant: {
+                worker: {
+                    id: currentWorkerId,
+                    ...initialAssistant
+                },
+                action: editAssistants
+            }
         };
-        
-        API.patch(`/doctors/${currentDoctorId}`, updatedDoctor)
-            .then(response => {
-                dispatch(editDoctor(updatedDoctor));
-            })
-            .catch(error => {
-                console.log(error);
-            });
+        const workerAction = workerActions[target];
+        if (!workerAction) return;
+        const { worker, action } = workerAction;
+        API.patch(`/${target}s/${currentWorkerId}`, worker);
+        dispatch(action(worker));
     };
 
     const trimSpaces = (inputValue: string) => {
         return inputValue.replace(/\s+/g, ' ').trimStart();
     };
 
-    const handleFieldChange = (field: keyof Doctor, value: string) => {
-        const newDoctor = { ...initialDoctor, [field]: trimSpaces(value) };
-        dispatch(changeModal({ initialDoctor: newDoctor }));
+    const toUpperFirstLetter = (str: string) => {
+        if (!str) return str;
+        return str[0].toUpperCase() + str.slice(1);
+    }
+
+    const handleFieldChange = (field: keyof (Doctor | Assistant), value: string) => {
+        const workerActions: WorkerActions<Omit<Doctor | Assistant, "id">> = {
+            doctor: {
+                worker: initialDoctor,
+                action: (newDoctor: Omit<Doctor, "id">) => changeModal({initialDoctor: newDoctor})
+            },
+            assistant: {
+                worker: initialAssistant,
+                action: (newAssistant: Omit<Assistant, "id">) => changeModal({initialAssistant: newAssistant})
+            }
+        };
+        const workerAction = workerActions[target];
+        if (!workerAction) return;
+        const {worker, action } = workerAction
+        const newWorker = { ...worker, [field]: trimSpaces(value) };
+        dispatch(action(newWorker));
+    };
+
+    const getWorker = () => {
+        switch (target) {
+            case 'doctor':
+                return initialDoctor;
+            case 'assistant':
+                return initialAssistant;
+            default: return undefined;
+        }
     };
 
     return (
@@ -86,49 +133,56 @@ export const Modal = () => {
                 onClick={e => e.stopPropagation()}>
                 <button
                     className="modalBtn"
-                    onClick={() => { handleIsClose(); dispatch(changeModal({ isOpen: false, mode: '', initialDoctor: defaultDoctor })) } }></button>
+                    onClick={() => { handleIsClose(); dispatch(changeModal({ isOpen: false, mode: '', initialDoctor: defaultDoctor , initialAssistant: defaultWorker})) } }></button>
                 <div className="modal__form">
-                    <h2>{mode === "add" ? "Add new Doctor" : "Edit Doctor"}</h2>
+                    <h2>{mode === "add" ? `Add new ${toUpperFirstLetter(target)}` : `Edit ${toUpperFirstLetter(target)}`}</h2>
                     <label htmlFor="name">Name</label>
                     <input
-                        value={initialDoctor?.fullname}
+                        value={getWorker()?.fullname}
                         onChange={(e) => handleFieldChange('fullname', e.target.value)}
                         type="text"
                         placeholder='Steve Perry'/>
                     <label htmlFor="email">Email</label>
                     <input
-                        value={initialDoctor?.mail}
+                        value={getWorker()?.mail}
                         onChange={(e) => handleFieldChange('mail', e.target.value)}
                         type="text"
                         placeholder='example@mail.com'
                         maxLength={32}/>
                     <label htmlFor="phone number">Phone number</label>
                     <input
-                        value={initialDoctor?.phone}
+                        value={getWorker()?.phone}
                         onChange={(e) => handleFieldChange('phone', e.target.value)}
                         type="text"
                         placeholder='+__-(___)-___-____'
                         maxLength={12}/>
-                    <div className="modal__allerts">
-                        <label htmlFor="allerts">Allerts</label>
-                        <div className="allerts-container">
-                            {allerts.map(
-                                (allert) =>
-                                    <AllertElement
-                                        allert={allert}
-                                        checked={initialDoctor.allerts.some(
-                                            (doctorAllert) => doctorAllert.id === allert.id)}
-                                    />)}
+                    {target==="doctor" &&  
+                        <div className="modal__allerts">
+                            <label htmlFor="allerts">Allerts</label>
+                            <div className="allerts-container">
+                                {allerts.map(
+                                    (allert) =>
+                                        <AllertElement
+                                            allert={allert}
+                                            checked={initialDoctor.allerts.some(
+                                                (doctorAllert) => doctorAllert.id === allert.id)}
+                                        />)}
+                            </div>
                         </div>
-                    </div>
+                    }
                 </div>
                 <div className="modal__button">
                     <ButtonAdd text='Save' onClick={() => {
-                        if (!modalDoctor.fullname || !modalDoctor.mail || !modalDoctor.phone) return alert("Enter all fields, please!");
-                        mode === 'add'
-                            ? handleAddDoctor()
-                            : handleEditDoctor();
-                        dispatch(changeModal({ isOpen: false, mode: '', initialDoctor: defaultDoctor }) );
+                        const modalWorker = getWorker();
+                        if (!modalWorker?.fullname || !modalWorker.mail || !modalWorker.phone) return alert("Enter all fields, please!");
+                        switch (mode) {
+                            case 'add': handleAdd();
+                                break;
+                            case 'edit': handleEdit();
+                                break;
+                            default: console.log("Error! Try again!")
+                        }
+                        dispatch(changeModal({ isOpen: false, mode: '', initialDoctor: defaultDoctor, initialAssistant: defaultWorker }) );
                     }} />
                 </div>
             </div>
