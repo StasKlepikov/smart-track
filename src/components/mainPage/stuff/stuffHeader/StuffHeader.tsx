@@ -32,7 +32,7 @@ export const StuffHeader = () => {
                         <NavLink
                             to="/stuff/receptionist"
                             className={({ isActive }) => (isActive ? "active" : "pending")
-                            }><li>Receptionist</li></NavLink>
+                            }><li>Receptionists</li></NavLink>
                     </ul>
                 </div>
                 <ButtonAdd text={"Add new"} onClick={handleIsOpen}/>

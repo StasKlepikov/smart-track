@@ -1,24 +1,52 @@
+import { useDispatch } from 'react-redux';
+import { ReceptionistElementProps } from '../../../../../services/typedef';
 import '../../StuffElement.scss';
+import { changeModal } from '../../../../../services/actions/modalAction';
+import { API } from '../../../../../axios';
+import { deleteReceptionists } from '../../../../../services/actions/receptionistsAction';
 
 
-export const ReceptionistElement = () => { 
+export const ReceptionistElement = ({ receptionist, index }: ReceptionistElementProps) => { 
+
+    const dispatch = useDispatch();
+
+    const handleEdit = () => {
+        const { id , ...initialReceptionist} = receptionist;
+        dispatch(changeModal({
+            isOpen: true,
+            mode: 'edit',
+            currentWorkerId: id,
+            initialReceptionist
+        }));
+    };
+
+    const handleDelete = () => {
+        API.delete(`/receptionists/${receptionist.id}`)
+        .then(response => {
+            dispatch(deleteReceptionists(receptionist.id));
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    };
+
     return (
         <div className='worker-element'>
             <div className="worker__id">
-                <h3>id</h3>
+                <h3>{index}</h3>
             </div>
             <div className="worker__name flex-element">
-                <h3>fullname</h3>
+                <h3>{receptionist.fullname}</h3>
             </div>
             <div className="worker__mail flex-element">
-                <p>mail</p>
+                <p>{receptionist.mail}</p>
             </div>
             <div className="worker__phone flex-element">
-                <p>telephone</p>
+                <p>{receptionist.phone}</p>
             </div>
             <div className="worker__btns flex-element">
-                <button></button>
-                <button></button>
+                <button title='Edit' onClick={() => handleEdit()}></button>
+                <button title='Delete' onClick={() => handleDelete()}></button>
             </div>
         </div>
     );

@@ -13,7 +13,7 @@ import { Sequence } from './components/mainPage/sequence/Sequence';
 import { NotFoundPage } from './components/notFoundPage/NotFoundPage';
 import { Doctors } from './components/mainPage/stuff/doctors/Doctors';
 import { Assistants } from './components/mainPage/stuff/assistants/Assistants';
-import { Receptionist } from './components/mainPage/stuff/receptionist/Receptionist';
+import { Receptionists } from './components/mainPage/stuff/receptionist/Receptionists';
 
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
 						<Route path='/stuff' element={<Stuff />}>
 							<Route path='/stuff' element={<Doctors />}></Route>
 							<Route path='/stuff/assistants' element={<Assistants />}></Route>
-							<Route path='/stuff/receptionist' element={<Receptionist />}></Route>
+							<Route path='/stuff/receptionist' element={<Receptionists />}></Route>
 						</Route>
 						<Route path='/allerts' element={<Allerts />}></Route>
 						<Route path='/sequence' element={<Sequence />}></Route>
