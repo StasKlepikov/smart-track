@@ -5,7 +5,7 @@ import { ButtonAdd } from '../../../utilities/buttonAdd/ButtonAdd';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { Allert, AllertsState, Assistant, Doctor, EditDoctorPayload, RootState } from '../../../services/typedef';
+import { Allert, AllertsState, Assistant, Doctor, Receptionist, RootState } from '../../../services/typedef';
 import { changeModal } from '../../../services/actions/modalAction';
 import { addDoctor, editDoctor } from '../../../services/actions/doctorsAction';
 import { defaultDoctor, defaultWorker} from '../../../services/reducers/modalReducer';
@@ -14,6 +14,7 @@ import { putAllerts } from '../../../services/actions/allertsAction';
 import { AllertElement } from './allert/AllertElement';
 import { Allerts } from '../allerts/Allerts';
 import { addAssistants, editAssistants } from '../../../services/actions/assistantsAction';
+import { addReceptionists, editReceptionists } from '../../../services/actions/receptionistsAction';
 
 type WorkerActions<TWorker extends object> = {
     [key: string]: { worker: TWorker, action: Function }
@@ -22,7 +23,7 @@ type WorkerActions<TWorker extends object> = {
 export const Modal = () => {
     
     const dispatch = useDispatch();
-    const { isOpen, mode, target, currentWorkerId, initialDoctor, initialAssistant } = useSelector((state: RootState) => state.modal);
+    const { isOpen, mode, target, currentWorkerId, initialDoctor, initialAssistant, initialReceptionist } = useSelector((state: RootState) => state.modal);
     
 
     const allerts = useSelector<{ allerts: AllertsState }, Allert[]>(state => state.allerts.allerts);
@@ -46,7 +47,7 @@ export const Modal = () => {
     };
 
     const handleAdd = () => { 
-        const workerActions: WorkerActions<Omit<Doctor | Assistant, "id">> =
+        const workerActions: WorkerActions<Omit<Doctor | Assistant | Receptionist, "id">> =
         {
             doctor: { 
                 worker: initialDoctor,
@@ -55,6 +56,10 @@ export const Modal = () => {
             assistant: {
                 worker: initialAssistant,
                 action: addAssistants
+            },
+            receptionist: {
+                worker: initialReceptionist,
+                action: addReceptionists
             }
         };
         const workerAction = workerActions[target];
@@ -65,7 +70,7 @@ export const Modal = () => {
     };
 
     const handleEdit = () => { 
-        const workerActions: WorkerActions<Partial <Doctor | Assistant>> =
+        const workerActions: WorkerActions<Partial <Doctor | Assistant | Receptionist>> =
         {
             doctor: { 
                 worker: {
@@ -80,6 +85,13 @@ export const Modal = () => {
                     ...initialAssistant
                 },
                 action: editAssistants
+            },
+            receptionist: {
+                worker: {
+                    id: currentWorkerId,
+                    ...initialReceptionist
+                },
+                action: editReceptionists
             }
         };
         const workerAction = workerActions[target];
@@ -98,8 +110,8 @@ export const Modal = () => {
         return str[0].toUpperCase() + str.slice(1);
     }
 
-    const handleFieldChange = (field: keyof (Doctor | Assistant), value: string) => {
-        const workerActions: WorkerActions<Omit<Doctor | Assistant, "id">> = {
+    const handleFieldChange = (field: keyof (Doctor | Assistant | Receptionist), value: string) => {
+        const workerActions: WorkerActions<Omit<Doctor | Assistant | Receptionist, "id">> = {
             doctor: {
                 worker: initialDoctor,
                 action: (newDoctor: Omit<Doctor, "id">) => changeModal({initialDoctor: newDoctor})
@@ -107,6 +119,10 @@ export const Modal = () => {
             assistant: {
                 worker: initialAssistant,
                 action: (newAssistant: Omit<Assistant, "id">) => changeModal({initialAssistant: newAssistant})
+            },
+            receptionist: {
+                worker: initialReceptionist,
+                action: (newReceptionist: Omit<Receptionist, "id">) => changeModal({initialReceptionist: newReceptionist})
             }
         };
         const workerAction = workerActions[target];
@@ -122,6 +138,8 @@ export const Modal = () => {
                 return initialDoctor;
             case 'assistant':
                 return initialAssistant;
+            case 'receptionist':
+                return initialReceptionist;
             default: return undefined;
         }
     };
@@ -133,7 +151,7 @@ export const Modal = () => {
                 onClick={e => e.stopPropagation()}>
                 <button
                     className="modalBtn"
-                    onClick={() => { handleIsClose(); dispatch(changeModal({ isOpen: false, mode: '', initialDoctor: defaultDoctor , initialAssistant: defaultWorker})) } }></button>
+                    onClick={() => { handleIsClose(); dispatch(changeModal({ isOpen: false, mode: '', initialDoctor: defaultDoctor , initialAssistant: defaultWorker, initialReceptionist: defaultWorker})) } }></button>
                 <div className="modal__form">
                     <h2>{mode === "add" ? `Add new ${toUpperFirstLetter(target)}` : `Edit ${toUpperFirstLetter(target)}`}</h2>
                     <label htmlFor="name">Name</label>
@@ -153,7 +171,7 @@ export const Modal = () => {
                     <input
                         value={getWorker()?.phone}
                         onChange={(e) => handleFieldChange('phone', e.target.value)}
-                        type="text"
+                        type="tel"
                         placeholder='+__-(___)-___-____'
                         maxLength={12}/>
                     {target==="doctor" &&  
@@ -182,7 +200,7 @@ export const Modal = () => {
                                 break;
                             default: console.log("Error! Try again!")
                         }
-                        dispatch(changeModal({ isOpen: false, mode: '', initialDoctor: defaultDoctor, initialAssistant: defaultWorker }) );
+                        dispatch(changeModal({ isOpen: false, mode: '', initialDoctor: defaultDoctor, initialAssistant: defaultWorker, initialReceptionist: defaultWorker }) );
                     }} />
                 </div>
             </div>
