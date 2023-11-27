@@ -50,6 +50,11 @@ export interface AddReceptionistPayload {
     phone: string;
 };
 
+export interface AddAllertPayload { 
+    name: string;
+    color: string;
+};
+
 export type EditDoctorPayload = Pick<Doctor, 'id'> & Partial<AddDoctorPayload>;
 
 export type EditAssistantPayload = Pick<Assistant, 'id'> & Partial<AddAssistantPayload>;
@@ -85,6 +90,11 @@ export interface AssistantElementProps{
 
 export interface ReceptionistElementProps{ 
     receptionist: Receptionist;
+    index: number;
+};
+
+export interface AllertElementProps{ 
+    allert: Allert;
     index: number;
 };
 
